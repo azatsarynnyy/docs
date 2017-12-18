@@ -1,5 +1,12 @@
 # Getting started with the Che IDE plugins
 This walkthrough helps you to get started with the basics of the Che IDE plugins.
+- [Generate a Che plugin](#generate-a-che-plugin)
+  * [pom.xml](#pomxml)
+  * [Entry point](#entry-point)
+  * [Consuming the shared libraries](#consuming-the-shared-libraries)
+- [Developing of a Che plugin](#developing-of-a-che-plugin)
+  * [Super DevMode](#sdm)
+- [Include a plugin into Che IDE](#include-a-plugin-into-che-ide)
 
 ## Generate a Che plugin
 Execute the following command to generate a new Che plugin from a ~~sample~~ template:
@@ -11,9 +18,9 @@ mvn archetype:generate \
 ```
 The command above generates the Maven multi-module project with the following structure:
 - `che-plugin-demo` - Maven reactor project for the Che plugin, which does not contain any sources and lists three modules to include:
-  - `ide` - this project contains the code that’s entirely IDE-side;
-  - `server` - this project contains the code that’s entirely server-side;
-  - `shared` - this project contains the code that’s shared between the IDE and server, e.g. models, DTOs, constants.
+  * `ide` - this project contains the code that’s entirely IDE-side;
+  * `server` - this project contains the code that’s entirely server-side;
+  * `shared` - this project contains the code that’s shared between the IDE and server, e.g. models, DTOs, constants.
 Let's look into the `ide` module structure:
 ```
 ide
@@ -115,7 +122,7 @@ Plugin entry point is called immediatelly after initilaizing the core part of th
 
 ## Developing of a Che plugin
 
-### SDM
+### Super DevMode
 `mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources`
 
 ## Include a plugin into Che IDE
