@@ -1,11 +1,11 @@
-# Getting started with the Che IDE plugins
+# Che IDE plugins getting started guide
 This walkthrough helps you to get started with the basics of the Che IDE plugins.
 - [Generate a Che plugin](#generate-a-che-plugin)
   * [pom.xml](#pomxml)
   * [Entry point](#entry-point)
   * [Consuming the shared libraries](#consuming-the-shared-libraries)
 - [Developing of a Che plugin](#developing-of-a-che-plugin)
-  * [Super DevMode](#sdm)
+  * [Running and debugging](#running-and-debugging)
 - [Include a plugin into Che IDE](#include-a-plugin-into-che-ide)
 
 ## Generate a Che plugin
@@ -122,7 +122,7 @@ Plugin entry point is called immediatelly after initilaizing the core part of th
 
 ## Developing of a Che plugin
 
-### Super DevMode
+### Running and debugging
 `mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources`
 
 ## Include a plugin into Che IDE
