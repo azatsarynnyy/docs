@@ -5,23 +5,37 @@ This walkthrough helps you to get started with the basics of the Che IDE plugins
   * [Entry point](#entry-point)
   * [Consuming the shared libraries](#consuming-the-shared-libraries)
 - [Developing of a Che plugin](#developing-of-a-che-plugin)
-  * [Running and debugging](#running-and-debugging)
-- [Include a plugin into Che IDE](#include-a-plugin-into-che-ide)
+  * [Running](#running)
+  * [Debugging](#debugging)
 
-## Generate a Che plugin
-Execute the following command to generate a new Che plugin from a ~~sample~~ template:
+## Generate a Che IDE plugin
+Execute the following command to generate a new Che IDE plugin from a sample:
 ```
 mvn archetype:generate \
    -DarchetypeGroupId=org.eclipse.che.archetype \
    -DarchetypeVersion=LATEST \
-   -DarchetypeArtifactId=plugin-wizard-archetype
+   -DarchetypeArtifactId=plugin-menu-archetype
 ```
-The command above generates the Maven multi-module project with the following structure:
-- `che-plugin-demo` - Maven reactor project for the Che plugin, which does not contain any sources and lists three modules to include:
-  * `ide` - this project contains the code that’s entirely IDE-side;
-  * `server` - this project contains the code that’s entirely server-side;
-  * `shared` - this project contains the code that’s shared between the IDE and server, e.g. models, DTOs, constants.
-Let's look into the `ide` module structure:
+During the code genration you will be asked to define several properies:
+- groupId - type `org.eclipse.che.plugin`
+- artifactId - type `che-plugin-menu`
+- version - just hit the <kbd>Enter</kbd> to use `1.0-SNAPSHOT`
+- package - type `org.eclipse.che.plugin.menu`
+
+The command above generates an IDE plugin that adds a menu item (action) that pops up a notification.
+
+Project with Che IDE plugin represents a Maven multi-module project with the following structure:
+```
+che-plugin-menu
+├─ assembly
+│  ├─ assembly-ide-war
+│  └─ assembly-main
+└─ plugins
+   └─ che-plugin-menu
+      └─ che-plugin-menu-ide // this project contains the code that’s entirely IDE-side
+```
+
+Let's look into the `che-plugin-menu-ide` module structure:
 ```
 ide
 ├─ src                                              // sources folder
@@ -68,7 +82,7 @@ There are several important parts in the ide/pom.xml:
                 <extensions>true</extensions>
                 <configuration>
                     <!-- GWT module name -->
-                    <moduleName>org.artem.plugin.ide.SampleWizardExtension</moduleName>
+                    <moduleName>org.eclipse.che.plugin.menu.SampleMenuExtension</moduleName>
                 </configuration>
             </plugin>
             ...
@@ -94,7 +108,7 @@ Name of the [GWT module](http://www.gwtproject.org/doc/latest/FAQ_Client.html#Wh
     <artifactId>gwt-maven-plugin</artifactId>
     <extensions>true</extensions>
     <configuration>
-        <moduleName>org.eclipse.che.plugin.demo.Demo</moduleName>
+        <moduleName>org.eclipse.che.plugin.menu.SampleMenuExtension</moduleName>
     </configuration>
 </plugin>
 ```
@@ -103,42 +117,31 @@ For details on the generating GWT module, read the `gwt:generate-module` mojo [d
 ### Entry point
 Che IDE plugin has an enrty point - Java class annotated with an [`@org.eclipse.che.ide.api.extension.Extension`](https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java) annotation.
 ```java
-package org.eclipse.che.plugin.demo.client;
+package org.eclipse.che.plugin.menu.ide;
 
-import com.google.inject.Inject;
 import org.eclipse.che.ide.api.extension.Extension;
 
-@Extension(title = "Sample Wizard")
-public class SampleWizardExtension {
-
-  @Inject
-  public SampleWizardExtension() {
-    ...
-  }
+@Extension(title = "Sample Menu")
+public class SampleMenuExtension {
+  ...
 }
 ```
-
 Plugin entry point is called immediatelly after initilaizing the core part of the Che IDE.
 
 ## Developing of a Che plugin
-
-### Running and debugging
-`mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources`
-
-## Include a plugin into Che IDE
-To include your plugin into Che IDE:
-- ensure that your Che plugin is already built;
-- add a dependency into the [pom.xml](https://github.com/eclipse/che/blob/che6/ide/che-ide-full/pom.xml):
-```xml
-    <dependencies>
-        ...
-        <dependency>
-            <groupId>org.eclipse.che.plugin</groupId>
-            <artifactId>che-plugin-demo</artifactId>
-        </dependency>
-    </dependencies>
+### Running
+To try your plugin with Che IDE:
+1. Build your plugin with `mvn clean install`.
+2. Start Che with your local binaries:
 ```
-- rebuild Che IDE:
-`mvn clean install -pl :che-ide-full,che-ide-gwt-app,assembly-ide-war`
-- restart Che:
-`che stop && che start`
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                    -v <local-path>:/data \
+                    -v <local-assembly>:/assembly \
+                    eclipse/che-cli:che6 start
+```
+local-path - /home/artem/che/data
+
+local-assembly - /home/artem/projects/che-plugin-menu/assembly/assembly-main/target/eclipse-che-1.0-SNAPSHOT/eclipse-che-1.0-SNAPSHOT
+
+### Debugging
+`mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources`
