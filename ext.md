@@ -6,6 +6,7 @@ This walkthrough helps you to get started with the basics of the Che IDE plugins
   * [Consuming the shared libraries](#consuming-the-shared-libraries)
 - [Developing of a Che plugin](#developing-of-a-che-plugin)
   * [Running](#running)
+  * [Test changes](#test-changes)
   * [Debugging](#debugging)
 
 ## Generate a Che IDE plugin
