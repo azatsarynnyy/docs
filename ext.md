@@ -101,7 +101,7 @@ Dependency on the library that provides a [set of APIs](https://docs.google.com/
 </dependency>
 ```
 
-Name of the [GWT module](http://www.gwtproject.org/doc/latest/FAQ_Client.html#What_is_a_GWT_Module?) to generate defined in the configuration of `gwt-maven-plugin`:
+Name of the GWT module to generate defined in the configuration of `gwt-maven-plugin`:
 ```xml
 <plugin>
     <groupId>net.ltgt.gwt.maven</groupId>
@@ -131,7 +131,7 @@ Plugin entry point is called immediatelly after initilaizing the core part of th
 ## Developing of a Che plugin
 ### Running
 To try your plugin with Che IDE:
-1. Build your plugin with `mvn clean install`.
+1. Build Che plugin with `mvn clean install`.
 2. Start Che with your local binaries:
 ```
 docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
@@ -139,9 +139,17 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
                     -v <local-assembly>:/assembly \
                     eclipse/che-cli:che6 start
 ```
-local-path - /home/artem/che/data
+Now open launched Che IDE and see that plugin is included:
+- plugin name is in the plugins list `Profile->Preferences`;
+- menu `Sample` with action `Say Hello` is present in the menu bar.
 
-local-assembly - /home/artem/projects/che-plugin-menu/assembly/assembly-main/target/eclipse-che-1.0-SNAPSHOT/eclipse-che-1.0-SNAPSHOT
+### Test changes
+Rebuilding Che IDE with your changes in the plugin's code isn't so fast. But you can use GWT Super DevMode to quick test your changes. To load Che IDE in Super DevMode you need to launch GWT Code Server. Go to the root folder of your plugin (`che-plugin-menu`) and execute the following command `mvn gwt:codeserver -pl :assembly-ide-war -am`.
+Once CodeServer is run there's a message in a terminal:
+
+`[INFO] The code server is ready at http://127.0.0.1:9876/`
+
+Now you can recompile Che IDE with your chages applyed by `Assistant -> GWT Super DevMode: recompile` action.
 
 ### Debugging
-`mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources`
+You can debug your plugin using Chrome DevTools when Che IDE launched in a Super DevMode.
