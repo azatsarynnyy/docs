@@ -8,7 +8,7 @@ This walkthrough helps you to get started with the basics of the Che IDE plugins
   * [Debugging](#debugging)
 - [Including plugin to Che IDE](#including-a-plugin-to-che-ide)
 
-## Generate a Che IDE plugin
+## Generate a Che plugin
 Execute the following command to generate a new Che IDE plugin from a sample:
 ```
 mvn archetype:generate \
