@@ -3,11 +3,11 @@ This walkthrough helps you to get started with the basics of the Che IDE plugins
 - [Generate a Che plugin](#generate-a-che-plugin)
   * [pom.xml](#pomxml)
   * [Entry point](#entry-point)
-  * [Consuming the shared libraries](#consuming-the-shared-libraries)
 - [Developing of a Che plugin](#developing-of-a-che-plugin)
   * [Running](#running)
-  * [Test changes](#test-changes)
+  * [Testing changes](#testing-changes)
   * [Debugging](#debugging)
+- [Including Che plugin to Che IDE](#including-a-che-plugin-to-che-ide)
 
 ## Generate a Che IDE plugin
 Execute the following command to generate a new Che IDE plugin from a sample:
@@ -133,24 +133,47 @@ Plugin entry point is called immediatelly after initilaizing the core part of th
 ### Running
 To try your plugin with Che IDE:
 1. Build Che plugin with `mvn clean install`.
-2. Start Che with your local binaries:
+2. Start Basic Che (minimal assembly) with your plugin included:
 ```
 docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
                     -v <local-path>:/data \
                     -v <local-assembly>:/assembly \
-                    eclipse/che-cli:che6 start
+                    eclipse/che-cli:nightly start
 ```
-Now open launched Che IDE and see that plugin is included:
-- plugin name is in the plugins list `Profile->Preferences`;
+`local-path` - `~/che/data`
+
+`local-assembly` - `~/projects/che-plugin-menu/assembly/assembly-main/target/eclipse-che-1.0-SNAPSHOT/eclipse-che-1.0-SNAPSHOT`
+
+3. Open launched Che IDE and see that `Sample Menu` plugin is included:
+- plugin name is in the plugins list `Profile -> Preferences`;
 - menu `Sample` with action `Say Hello` is present in the menu bar.
 
-### Test changes
-Rebuilding Che IDE with your changes in the plugin's code isn't so fast. But you can use GWT Super DevMode to quick test your changes. To load Che IDE in Super DevMode you need to launch GWT Code Server. Go to the root folder of your plugin (`che-plugin-menu`) and execute the following command `mvn gwt:codeserver -pl :assembly-ide-war -am`.
-Once CodeServer is run there's a message in a terminal:
+### Testing changes
+Rebuilding Che IDE with your changes in the plugin's code isn't so fast. But you can use GWT Super DevMode to quick test your changes. To load Che IDE in Super DevMode you need to launch GWT Code Server.
+
+Go to the root folder of the plugin (`che-plugin-menu`) and execute the command `mvn gwt:codeserver -pl :assembly-ide-war -am`.
+Once the CodeServer is run you'll see a message in a terminal:
 
 `[INFO] The code server is ready at http://127.0.0.1:9876/`
 
 Now you can recompile Che IDE with your chages applyed by `Assistant -> GWT Super DevMode: recompile` action.
 
 ### Debugging
-You can debug your plugin using Chrome DevTools when Che IDE launched in a Super DevMode.
+You can debug your plugin using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) when Che IDE is launched in a Super DevMode.
+
+## Including Che plugin to Che IDE
+1. Add a plugin dependency to `dependencyManagement` section of [che-parent/pom.xml](https://github.com/eclipse/che/blob/master/pom.xml)
+```xml
+<dependency>
+    <groupId>org.eclipse.che.plugin</groupId>
+    <artifactId>plugin-menu-ide</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+2. Add a plugin dependecny to [che-ide-full/pom.xml](https://github.com/eclipse/che/blob/master/ide/che-ide-full/pom.xml)
+```xml
+<dependency>
+    <groupId>org.eclipse.che.plugin</groupId>
+    <artifactId>plugin-menu-ide</artifactId>
+</dependency>
+```
