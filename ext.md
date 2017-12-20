@@ -7,7 +7,7 @@ This walkthrough helps you to get started with the basics of the Che IDE plugins
   * [Running](#running)
   * [Testing changes](#testing-changes)
   * [Debugging](#debugging)
-- [Including Che plugin to Che IDE](#including-a-che-plugin-to-che-ide)
+- [Including plugin to Che IDE](#including-a-plugin-to-che-ide)
 
 ## Generate a Che IDE plugin
 Execute the following command to generate a new Che IDE plugin from a sample:
@@ -28,12 +28,12 @@ The command above generates an IDE plugin that adds a menu item (action) that po
 Project with Che IDE plugin represents a Maven multi-module project with the following structure:
 ```
 che-plugin-menu
-├─ assembly
+├─ assembly                  // Basic Che IDE with the plugin already included to quick test your changes
 │  ├─ assembly-ide-war
 │  └─ assembly-main
 └─ plugins
    └─ che-plugin-menu
-      └─ che-plugin-menu-ide // this project contains the code that’s entirely IDE-side
+      └─ che-plugin-menu-ide // IDE part of the plugin
 ```
 
 Let's look into the `che-plugin-menu-ide` module structure:
@@ -42,8 +42,11 @@ ide
 ├─ src                                              // sources folder
 │  ├─ main
 │  │  ├─ java
-│  │  │  └─ org.eclipse.che.ide.ext.demo.client
-│  │  │     └─ DemoExtension.java                   // entry point
+│  │  │  └─ org.eclipse.che.plugin.menu.ide
+│  │  │     ├─ ...
+│  │  │     ├─ inject
+│  │  │     │  └─ SampleMenuGinModule.java          // GIN module
+│  │  │     └─ SampleMenuExtension.java             // entry point
 │  │  ├─ resources
 │  │  │  └─ org.eclipse.che.ide.ext.demo.client
 │  │  └─ module.gwt.xml                             // template for generating GWT module
@@ -53,9 +56,9 @@ ide
 │     ├─ META-INF
 │     │  └─ gwt
 │     │     └─ mainModule                           // see https://tbroyer.github.io/gwt-maven-plugin/generate-module-metadata-mojo.html
-│     └─ org.eclipse.che.ide.ext.demo
-│        ├─ client
-│        └─ Demo.gwt.xml                            // generated GWT module (for more details, see https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html)
+│     └─ org.eclipse.che.plugin.menu
+│        ├─ ...
+│        └─ SampleMenuExtension.gwt.xml             // generated GWT module (for more details, see https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html)
 └─ pom.xml
 ```
 
@@ -131,7 +134,9 @@ Plugin entry point is called immediatelly after initilaizing the core part of th
 
 ## Developing of a Che plugin
 ### Running
-To try your plugin with Che IDE:
+There's an assembly with Basic Che IDE included
+To quick try your plugin you can
+You can quick try your plugin with Basic Che IDE.
 1. Build Che plugin with `mvn clean install`.
 2. Start Basic Che (minimal assembly) with your plugin included:
 ```
@@ -161,8 +166,9 @@ Now you can recompile Che IDE with your chages applyed by `Assistant -> GWT Supe
 ### Debugging
 You can debug your plugin using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) when Che IDE is launched in a Super DevMode.
 
-## Including Che plugin to Che IDE
-1. Add a plugin dependency to `dependencyManagement` section of [che-parent/pom.xml](https://github.com/eclipse/che/blob/master/pom.xml)
+## Including a plugin to Che IDE
+1. Clone Che sources: `git clone git@github.com:eclipse/che.git`
+2. Add a plugin dependency to `<dependencyManagement>` section in [che/pom.xml](https://github.com/eclipse/che/blob/master/pom.xml):
 ```xml
 <dependency>
     <groupId>org.eclipse.che.plugin</groupId>
@@ -170,10 +176,11 @@ You can debug your plugin using [Chrome DevTools](https://developers.google.com/
     <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
-2. Add a plugin dependecny to [che-ide-full/pom.xml](https://github.com/eclipse/che/blob/master/ide/che-ide-full/pom.xml)
+3. Add a plugin dependecny to [che/ide/che-ide-full/pom.xml](https://github.com/eclipse/che/blob/master/ide/che-ide-full/pom.xml):
 ```xml
 <dependency>
     <groupId>org.eclipse.che.plugin</groupId>
     <artifactId>plugin-menu-ide</artifactId>
 </dependency>
 ```
+4. Build Che IDE: `mvn sortpom:sort && mvn clean install`
