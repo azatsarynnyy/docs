@@ -4,7 +4,6 @@ This walkthrough helps you to get started with the basics of the Che IDE plugins
   * [pom.xml](#pomxml)
   * [Entry point](#entry-point)
 - [Developing of a Che plugin](#developing-of-a-che-plugin)
-  * [Running](#running)
   * [Testing changes](#testing-changes)
   * [Debugging](#debugging)
 - [Including plugin to Che IDE](#including-a-plugin-to-che-ide)
@@ -28,13 +27,14 @@ The command above generates an IDE plugin that adds a menu item (action) that po
 Project with Che IDE plugin represents a Maven multi-module project with the following structure:
 ```
 che-plugin-menu
-├─ assembly                  // Basic Che IDE with the plugin already included to quick test your changes
+├─ assembly                  // Basic Che with the generated plugin already included
 │  ├─ assembly-ide-war
 │  └─ assembly-main
 └─ plugins
    └─ che-plugin-menu
       └─ che-plugin-menu-ide // IDE part of the plugin
 ```
+Basic Che doesn't include any plugins and intended to help you quickly test your plugin.
 
 Let's look into the `che-plugin-menu-ide` module structure:
 ```
@@ -133,11 +133,8 @@ public class SampleMenuExtension {
 Plugin entry point is called immediatelly after initilaizing the core part of the Che IDE.
 
 ## Developing of a Che plugin
-### Running
-There's an assembly with Basic Che IDE included
-To quick try your plugin you can
-You can quick try your plugin with Basic Che IDE.
-1. Build Che plugin with `mvn clean install`.
+There's Basic Che assembly also generated in `assembly` folder to help you quickly test your plugin. To try the plugin that is being developed follow the next steps:
+1. Build the whole project with your plugin (`che-plugin-menu` folder): `mvn clean install`.
 2. Start Basic Che (minimal assembly) with your plugin included:
 ```
 docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
