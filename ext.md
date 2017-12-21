@@ -9,7 +9,7 @@ This walkthrough helps you to get started with the basics of the Che IDE plugins
 - [Including plugin to Che IDE](#including-a-plugin-to-che-ide)
 
 ## Generate a Che plugin
-Thre're [several Maven archetypes](https://github.com/eclipse/che-archetypes/blob/master/README.md#archetype-list) are availbale for generating a new Che IDE plugin from a sample.
+There're [several Maven archetypes](https://github.com/eclipse/che-archetypes/blob/master/README.md#archetype-list) are available for generating a new Che IDE plugin from a sample.
 Execute the following command to generate an IDE plugin that adds a menu item that pops up a notification:
 ```
 mvn archetype:generate \
@@ -17,7 +17,7 @@ mvn archetype:generate \
    -DarchetypeVersion=LATEST \
    -DarchetypeArtifactId=plugin-menu-archetype
 ```
-During the code genration you will be asked to define the several properies:
+During the code generation you will be asked to define the several properties:
 - groupId - type `org.eclipse.che.plugin`
 - artifactId - type `che-plugin-menu`
 - version - just hit the <kbd>Enter</kbd> to use `1.0-SNAPSHOT`
@@ -88,7 +88,7 @@ For details on the generating GWT module, read the `gwt:generate-module` [mojo d
 
 ## Developing of a Che plugin
 ### Entry point
-Che IDE plugin has an enrty point - Java class annotated with an [`@org.eclipse.che.ide.api.extension.Extension`](https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java) annotation. Plugin entry point is called immediatelly after initilaizing the core part of the Che IDE.
+Che IDE plugin has an entry point - Java class annotated with an [`@org.eclipse.che.ide.api.extension.Extension`](https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java) annotation. Plugin entry point is called immediately after initializing the core part of the Che IDE.
 
 Here's an entry point of the plugin that we've generated:
 ```java
@@ -166,6 +166,8 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
 - plugin name is in the plugins list `Profile -> Preferences`;
 - menu `Sample` with action `Say Hello` is present in the menu bar.
 
+![eee](images/menu.png)
+
 **Note**, you don't need to rebuild Che IDE with your plugin this way every time you want to check your changes. For further developing you can use GWT Super DevMode which is the most productive way to develop your Che IDE plugin quickly.
 > GWT Super DevMode allows you to quickly recompile your code and see the results in a browser.
 
@@ -180,7 +182,9 @@ Once the CodeServer is run you'll see the message in a terminal:
 
 `[INFO] The code server is ready at http://127.0.0.1:9876/`
 
-Now you can recompile Che IDE with your chages applyed by clicking `Assistant -> GWT Super DevMode: recompile` menu item.
+Now you can recompile Che IDE with your changes applied by clicking `Assistant -> GWT Super DevMode: recompile` menu item.
+
+![eee](images/sdm.png)
 
 ### Debugging
 You can debug Java code of your plugin using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) when Che IDE is launched in a Super DevMode.
@@ -195,7 +199,7 @@ You can debug Java code of your plugin using [Chrome DevTools](https://developer
     <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
-3. Add a plugin dependecny to [che/ide/che-ide-full/pom.xml](https://github.com/eclipse/che/blob/master/ide/che-ide-full/pom.xml):
+3. Add a plugin dependency to [che/ide/che-ide-full/pom.xml](https://github.com/eclipse/che/blob/master/ide/che-ide-full/pom.xml):
 ```xml
 <dependency>
     <groupId>org.eclipse.che.plugin</groupId>
