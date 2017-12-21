@@ -116,7 +116,7 @@ Name of the GWT module to generate defined in the configuration of `gwt-maven-pl
     </configuration>
 </plugin>
 ```
-For details on the generating GWT module, read the `gwt:generate-module` mojo [description](https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html).
+For details on the generating GWT module, read the `gwt:generate-module` [mojo description](https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html).
 
 ### Entry point
 Che IDE plugin has an enrty point - Java class annotated with an [`@org.eclipse.che.ide.api.extension.Extension`](https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java) annotation.
