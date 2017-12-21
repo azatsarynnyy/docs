@@ -16,7 +16,7 @@ mvn archetype:generate \
    -DarchetypeVersion=LATEST \
    -DarchetypeArtifactId=plugin-menu-archetype
 ```
-During the code genration you will be asked to define several properies:
+During the code genration you will be asked to define the several properies:
 - groupId - type `org.eclipse.che.plugin`
 - artifactId - type `che-plugin-menu`
 - version - just hit the <kbd>Enter</kbd> to use `1.0-SNAPSHOT`
@@ -119,33 +119,62 @@ Name of the GWT module to generate defined in the configuration of `gwt-maven-pl
 For details on the generating GWT module, read the `gwt:generate-module` [mojo description](https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html).
 
 ### Entry point
-Che IDE plugin has an enrty point - Java class annotated with an [`@org.eclipse.che.ide.api.extension.Extension`](https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java) annotation.
+Che IDE plugin has an enrty point - Java class annotated with an [`@org.eclipse.che.ide.api.extension.Extension`](https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java) annotation. Plugin entry point is called immediatelly after initilaizing the core part of the Che IDE.
+
+Here's an example of entry point from the plugin that we've generated:
 ```java
 package org.eclipse.che.plugin.menu.ide;
 
+import static org.eclipse.che.ide.api.action.IdeActions.GROUP_HELP;
+import static org.eclipse.che.ide.api.action.IdeActions.GROUP_MAIN_MENU;
+import static org.eclipse.che.ide.api.constraints.Anchor.AFTER;
+
+import com.google.inject.Inject;
+import org.eclipse.che.ide.api.action.ActionManager;
+import org.eclipse.che.ide.api.action.DefaultActionGroup;
+import org.eclipse.che.ide.api.constraints.Constraints;
 import org.eclipse.che.ide.api.extension.Extension;
+import org.eclipse.che.plugin.menu.ide.action.SampleAction;
 
 @Extension(title = "Sample Menu")
 public class SampleMenuExtension {
-  ...
+
+  private static final String SAMPLE_GROUP_MAIN_MENU = "Sample";
+
+  @Inject
+  private void prepareActions(SampleAction sampleAction, ActionManager actionManager) {
+
+    DefaultActionGroup mainMenu = (DefaultActionGroup) actionManager.getAction(GROUP_MAIN_MENU);
+
+    DefaultActionGroup sampleGroup =
+        new DefaultActionGroup(SAMPLE_GROUP_MAIN_MENU, true, actionManager);
+    actionManager.registerAction("sampleGroup", sampleGroup);
+    mainMenu.add(sampleGroup, new Constraints(AFTER, GROUP_HELP));
+
+    actionManager.registerAction("sayHello", sampleAction);
+    sampleGroup.add(sampleAction, Constraints.FIRST);
+  }
 }
 ```
-Plugin entry point is called immediatelly after initilaizing the core part of the Che IDE.
 
 ## Developing of a Che plugin
 There's Basic Che assembly also generated in `assembly` folder to help you quickly test your plugin. To try the plugin that is being developed follow the next steps:
 1. Build the whole project with your plugin (`che-plugin-menu` folder): `mvn clean install`.
-2. Start Basic Che (minimal assembly) with your plugin included:
+2. Start Basic Che with your plugin included:
 ```
 docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
                     -v <local-path>:/data \
                     -v <local-assembly>:/assembly \
-                    eclipse/che-cli:nightly start
+                    eclipse/che:nightly start
 ```
-`local-path` - `~/che/data`
+Here's an example:
+```
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                    -v /home/user/che/data:/data \
+                    -v /home/user/projects/che-plugin-menu/assembly/assembly-main/target/eclipse-che-1.0-SNAPSHOT/eclipse-che-1.0-SNAPSHOT:/assembly \
+                    eclipse/che:nightly start
 
-`local-assembly` - `~/projects/che-plugin-menu/assembly/assembly-main/target/eclipse-che-1.0-SNAPSHOT/eclipse-che-1.0-SNAPSHOT`
-
+```
 3. Open launched Che IDE and see that `Sample Menu` plugin is included:
 - plugin name is in the plugins list `Profile -> Preferences`;
 - menu `Sample` with action `Say Hello` is present in the menu bar.
@@ -153,15 +182,18 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
 ### Testing changes
 Rebuilding Che IDE with your changes in the plugin's code isn't so fast. But you can use GWT Super DevMode to quick test your changes. To load Che IDE in Super DevMode you need to launch GWT Code Server.
 
-Go to the root folder of the plugin (`che-plugin-menu`) and execute the command `mvn gwt:codeserver -pl :assembly-ide-war -am`.
+Go to the root folder of the plugin project (`che-plugin-menu`) and execute the command:
+
+`mvn gwt:codeserver -pl :assembly-ide-war -am`
+
 Once the CodeServer is run you'll see a message in a terminal:
 
 `[INFO] The code server is ready at http://127.0.0.1:9876/`
 
-Now you can recompile Che IDE with your chages applyed by `Assistant -> GWT Super DevMode: recompile` action.
+Now you can recompile Che IDE with your chages applyed by clicking `Assistant -> GWT Super DevMode: recompile` menu item.
 
 ### Debugging
-You can debug your plugin using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) when Che IDE is launched in a Super DevMode.
+You can debug Java code of your plugin using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) when Che IDE is launched in a Super DevMode.
 
 ## Including a plugin to Che IDE
 1. Clone Che sources: `git clone git@github.com:eclipse/che.git`
