@@ -190,7 +190,7 @@ Now you can recompile Che IDE with your changes applied by clicking `Assistant -
 You can debug Java code of your plugin using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) when Che IDE is launched in a Super DevMode.
 
 ## Including a plugin to Che IDE
-To include your plugin to .
+To build Che IDE full assembly (with all plugins included) including your plugin:
 1. Clone Che sources: `git clone git@github.com:eclipse/che.git`
 2. Add a plugin dependency to `<dependencyManagement>` section in [che/pom.xml](https://github.com/eclipse/che/blob/master/pom.xml):
 ```xml
