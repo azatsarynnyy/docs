@@ -166,9 +166,9 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
 - plugin name is in the plugins list `Profile -> Preferences`;
 - menu `Sample` with action `Say Hello` is present in the menu bar.
 
-![eee](images/menu.png)
+![Sample menu](images/menu.png "Sample menu")
 
-**Note**, you don't need to rebuild Che IDE with your plugin this way every time you want to check your changes. For further developing you can use GWT Super DevMode which is the most productive way to develop your Che IDE plugin quickly.
+**Note**, you don't need to rebuild Che IDE with your plugin this way every time you want to check your changes. Most of the times you can use GWT Super DevMode which is the most productive way to develop your Che IDE plugin quickly.
 > GWT Super DevMode allows you to quickly recompile your code and see the results in a browser.
 
 To load Che IDE in Super DevMode you need to launch GWT Code Server.
@@ -184,12 +184,13 @@ Once the CodeServer is run you'll see the message in a terminal:
 
 Now you can recompile Che IDE with your changes applied by clicking `Assistant -> GWT Super DevMode: recompile` menu item.
 
-![eee](images/sdm.png)
+![Recompile action](images/sdm.png "Recompile action")
 
 ### Debugging
 You can debug Java code of your plugin using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) when Che IDE is launched in a Super DevMode.
 
 ## Including a plugin to Che IDE
+To include your plugin to .
 1. Clone Che sources: `git clone git@github.com:eclipse/che.git`
 2. Add a plugin dependency to `<dependencyManagement>` section in [che/pom.xml](https://github.com/eclipse/che/blob/master/pom.xml):
 ```xml
