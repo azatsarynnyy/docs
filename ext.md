@@ -160,7 +160,6 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
                     -v /home/user/che/data:/data \
                     -v /home/user/projects/che-plugin-menu/assembly/assembly-main/target/eclipse-che-1.0-SNAPSHOT/eclipse-che-1.0-SNAPSHOT:/assembly \
                     eclipse/che:nightly start
-
 ```
 3. Open launched Che IDE and see that `Sample Menu` plugin is included:
 - plugin name is in the plugins list `Profile -> Preferences`;
