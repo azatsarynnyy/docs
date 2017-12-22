@@ -142,6 +142,7 @@ public class SampleMenuGinModule extends AbstractGinModule {
   protected void configure() {}
 }
 ```
+In this case it's empty and useless, for example only.
 
 ## Build and run
 There's Basic Che assembly generated in the `assembly` folder to help you quickly test your plugin. To try the plugin that is being developed follow the next steps:
