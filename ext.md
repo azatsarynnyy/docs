@@ -1,15 +1,15 @@
 # Che IDE plugins getting started guide
 This walkthrough helps you to get started with the basics of the Che IDE plugins.
 - [Generate a Che plugin](#generate-a-che-plugin)
-  * [pom.xml (advanced)](#pomxml-advanced)
-- [Developing of a Che plugin](#developing-of-a-che-plugin)
-  * [Entry point](#entry-point)
-  * [Testing changes](#testing-changes)
-  * [Debugging](#debugging)
-- [Including plugin to Che IDE](#including-a-plugin-to-che-ide)
+  * [pom.xml (key points)](#pomxml-key-points)
+  * [IDE extension class](#ide-extension-class)
+  * [Dependency injection](#dependency-injection)
+- [Build and run](#build-and-run)
+- [Development and debugging](#development-and-debugging)
+- [Add your plugin to IDE assembly](#add-your-plugin-to-ide-assembly)
 
 ## Generate a Che plugin
-There're [several Maven archetypes](https://github.com/eclipse/che-archetypes/blob/master/README.md#archetype-list) are available for generating a new Che IDE plugin from a sample.
+There're [several Maven archetypes](https://github.com/eclipse/che-archetypes/blob/master/README.md#archetype-list) for generating a new Che IDE plugin.
 Execute the following command to generate an IDE plugin that adds a menu item that pops up a notification:
 ```
 mvn archetype:generate \
@@ -26,14 +26,14 @@ During the code generation you will be asked to define the several properties:
 Project with Che IDE plugin represents a Maven multi-module project with the following structure:
 ```
 che-plugin-menu
-├─ assembly                  // Basic Che with the generated plugin already included
+├─ assembly                  // Basic Che with the generated plugin
 │  ├─ assembly-ide-war
 │  └─ assembly-main
 └─ plugins
    └─ che-plugin-menu
       └─ che-plugin-menu-ide // IDE part of the plugin
 ```
-Basic Che doesn't include any plugins and intended to help you quickly [test your plugin](#testing-changes).
+> Basic Che doesn't include any plugins and intended to help you quickly [test your plugin](#testing-changes).
 
 Let's look into the `che-plugin-menu-ide` Maven module structure:
 ```
@@ -60,7 +60,7 @@ ide
 └─ pom.xml
 ```
 
-### pom.xml (advanced)
+### pom.xml (key points)
 There are several important parts in the pom.xml of the Che IDE plugin - `che-plugin-menu/plugins/che-plugin-menu/che-plugin-menu-ide/pom.xml`.
 - Packaging of the Maven project is `gwt-lib` which triggers [`gwt-lib`](https://tbroyer.github.io/gwt-maven-plugin/lifecycles.html#GWT_Library:_gwt-lib) Maven lifecycle that will build a [GWT library](https://tbroyer.github.io/gwt-maven-plugin/artifact-handlers.html#GWT_Library:_gwt-lib):
   ```xml
@@ -73,7 +73,7 @@ There are several important parts in the pom.xml of the Che IDE plugin - `che-pl
       <artifactId>che-core-ide-api</artifactId>
   </dependency>
   ```
-- Name of the GWT module to generate is defined in the configuration of `gwt-maven-plugin`:
+- Name of the GWT module is defined in the configuration of `gwt-maven-plugin`:
   ```xml
   <plugin>
       <groupId>net.ltgt.gwt.maven</groupId>
@@ -86,8 +86,7 @@ There are several important parts in the pom.xml of the Che IDE plugin - `che-pl
   ```
 For details on the generating GWT module, read the `gwt:generate-module` [mojo description](https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html).
 
-## Developing of a Che plugin
-### Entry point
+### IDE extension class
 Che IDE plugin has an entry point - Java class annotated with an [`@org.eclipse.che.ide.api.extension.Extension`](https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java) annotation. Plugin entry point is called immediately after initializing the core part of the Che IDE.
 
 Here's an entry point of the plugin that we've generated:
@@ -144,7 +143,7 @@ public class SampleMenuGinModule extends AbstractGinModule {
 }
 ```
 
-### Testing changes
+## Build and run
 There's Basic Che assembly generated in the `assembly` folder to help you quickly test your plugin. To try the plugin that is being developed follow the next steps:
 1. Build the whole project with your plugin (`che-plugin-menu` folder): `mvn clean install`.
 2. Start Basic Che with your plugin included:
@@ -167,8 +166,8 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock \
 
 ![Sample menu](images/menu.png "Sample menu")
 
-**Note**, you don't need to rebuild Che IDE with your plugin this way every time you want to check your changes. Most of the times you can use GWT Super DevMode which is the most productive way to develop your Che IDE plugin quickly.
-> GWT Super DevMode allows you to quickly recompile your code and see the results in a browser.
+## Development and debugging
+GWT Super DevMode allows you to quickly recompile your code and see the results in a browser.
 
 To load Che IDE in Super DevMode you need to launch GWT Code Server.
 > GWT Code Server runs the GWT compiler in draft mode, with most optimizations turned off.
@@ -181,14 +180,13 @@ Once the CodeServer is run you'll see the message in a terminal:
 
 `[INFO] The code server is ready at http://127.0.0.1:9876/`
 
-Now you can recompile Che IDE with your changes applied by clicking `Assistant -> GWT Super DevMode: recompile` menu item.
+Now you can recompile Che IDE with your changes by clicking `Assistant -> GWT Super DevMode: recompile` menu item.
 
 ![Recompile action](images/sdm.png "Recompile action")
 
-### Debugging
 You can debug Java code of your plugin using [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) when Che IDE is launched in a Super DevMode.
 
-## Including a plugin to Che IDE
+## Add your plugin to IDE assembly
 To build Che IDE full assembly (with all plugins included) including your plugin:
 1. Clone Che sources: `git clone git@github.com:eclipse/che.git`
 2. Add a plugin dependency to `<dependencyManagement>` section in [che/pom.xml](https://github.com/eclipse/che/blob/master/pom.xml):
