@@ -45,7 +45,7 @@ ide
 │     │     ├─ ...
 │     │     ├─ inject
 │     │     │  └─ SampleMenuGinModule.java          // GIN module
-│     │     └─ SampleMenuExtension.java             // entry point
+│     │     └─ SampleMenuExtension.java             // IDE extension class
 │     ├─ resources
 │     │  └─ org.eclipse.che.ide.ext.demo.client
 │     └─ module.gwt.xml                             // template for generating GWT module (for more details, see https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html)
