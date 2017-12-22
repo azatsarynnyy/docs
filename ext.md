@@ -33,7 +33,7 @@ che-plugin-menu
    └─ che-plugin-menu
       └─ che-plugin-menu-ide // IDE part of the plugin
 ```
-> Basic Che doesn't include any plugins and intended to help you quickly [test your plugin](#testing-changes).
+> Basic Che doesn't include any plugins and intended to help you test your plugin.
 
 Let's look into the `che-plugin-menu-ide` Maven module structure:
 ```
